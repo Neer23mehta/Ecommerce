@@ -1,0 +1,28 @@
+.Image img{
+    height: 150px;
+    width: 150px;
+}
+.Cart-Main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+}
+.Cart-ul{
+    display: inline;
+}
+
+.Content h2{
+    font-weight: bold;
+    font-size: 10px;
+}
+.Image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.Cart-ul button {
+    margin: 30px;
+}

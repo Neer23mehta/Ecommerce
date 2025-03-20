@@ -40,3 +40,32 @@ export const getbuydetails = async ({params}) => {
     }
 
 }
+export const getbuysdetail =  async ({params}) => {
+    const id = params.productid
+
+    const Api =  `https://fakestoreapi.com/products/${id}`
+
+    try{
+        const res =  await fetch(Api)
+        const data = await res.json()
+        return data
+    }
+    catch (error){
+        console.log(error)
+    }
+}
+
+export const getorderdetail =  async ({params}) => {
+    const id = params.productid
+
+    const Api =  `https://fakestoreapi.com/products/${id}`
+
+    try{
+        const res =  await fetch(Api)
+        const data = await res.json()
+        return data
+    }
+    catch (error){
+        console.log(error)
+    }
+}

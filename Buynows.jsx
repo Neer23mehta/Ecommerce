@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate, useLoaderData } from "react-router-dom";
+import { additems, confirmorder } from "./Store/StoreR";
 
-const key = "order_detail";
+const key = "order_detail_single";
 
-export const buynowdetails = async ({ request }) => {
+export const buynowDetails = async ({ request }) => {
   try {
     const input = await request.input();
     const data = Object.fromEntries(input);
@@ -13,7 +14,8 @@ export const buynowdetails = async ({ request }) => {
   }
 };
 
-export const Buynow = () => {
+export const BuyNow = () => {
+  const buydetails = useLoaderData();
   const items = useSelector((state) => state.items);
   const [input, setInput] = useState({
     fullname: "",
@@ -31,14 +33,11 @@ export const Buynow = () => {
     city: "",
   });
 
-  const Navigate = useNavigate();
   const [citysuggest, setCitySuggest] = useState([]);
   const [pinInvalid, setPinInvalid] = useState(true);
 
-  const totalPrice = Math.round(
-    items.reduce((acc, item) => acc + item.price * item.quantity, 0) * 86.7
-  );
-  const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
+  const Navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const fetchGetData = async (pincode) => {
     try {
@@ -110,35 +109,25 @@ export const Buynow = () => {
     return valid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, buydetails, userId) => {
     e.preventDefault();
     if (validateForm()) {
       localStorage.setItem(key, JSON.stringify(input));
-    }
-    localStorage.removeItem(key);
-  };
-
-  const handleOrder = () => {
-    const user = window.confirm("Are you sure you want to buy?");
-    if (user && validateForm()) {
-      Navigate(`/buynow/${Math.random()}`);
+      Navigate(`${id}/buynow/orders`);
+      dispatch(additems(buydetails, userId));
+      dispatch(confirmorder(buydetails));
     } else {
-      Navigate("/buynow");
+      Navigate(`${id}/buynow`);
     }
   };
 
-  if (!totalPrice) {
-    return (
-      <div className="text-center mt-10">
-        <h1 className="text-2xl font-semibold">Your Order is Placed And It is</h1>
-      </div>
-    );
-  }
+  const { id, title, description, rating, price, image, category } = buydetails;
+  const newprice = Math.round(price * 86.7);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
       <h1 className="text-3xl font-semibold text-center mb-6">Order Details</h1>
-      <form method="POST" action="/buynow" onSubmit={handleSubmit} className="space-y-6">
+      <form method="POST" action="/buynow" onSubmit={(e) => handleSubmit(e, buydetails, 1)} className="space-y-6">
         <div>
           <label htmlFor="fullname" className="block text-sm font-medium text-gray-700">Full Name:</label>
           <input
@@ -231,12 +220,10 @@ export const Buynow = () => {
         </div>
 
         <div className="mt-4 text-center">
-          <p className="text-lg font-medium">Total Price: {totalPrice} Rs</p>
-          <p className="text-lg font-medium">Total Quantity: {totalQuantity}</p>
-          <NavLink to={`/buynow/${Math.random()}`}>
+          <p className="text-lg font-medium">Total Price: {newprice} Rs</p>
+          <NavLink to={`/${id}/buynow/orders`}>
             <button
               type="submit"
-              onClick={handleOrder}
               className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md font-semibold hover:bg-blue-600"
             >
               Place Order

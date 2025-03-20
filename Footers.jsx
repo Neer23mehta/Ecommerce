@@ -1,24 +1,22 @@
-import "/home/tristate/Desktop/Neer/neer/src/EcommerseUI/Footer.css"
-
 export const Footers = () => {
     return (
-        <div className="Footer">
-            <footer className="Ft">
-                <ul className="Items-ul">
-                    <li>
-                        <a>Contact No.</a>
-                        <a>931320....</a>
+        <div className="bg-gray-800 text-white py-8">
+            <footer className="max-w-screen-xl mx-auto px-4">
+                <ul className="flex justify-between space-x-8">
+                    <li className="flex flex-col space-y-2">
+                        <span className="font-bold">Contact No.</span>
+                        <span>931320....</span>
                     </li>
-                    <li>
-                        <a>E-mail Address</a>
-                        <a>mehtaneer@gmail.com</a>
+                    <li className="flex flex-col space-y-2">
+                        <span className="font-bold">E-mail Address</span>
+                        <span>mehtaneer@gmail.com</span>
                     </li>
-                    <li>
-                        <a>Address</a>
-                        <a>Ahmedabad</a>
+                    <li className="flex flex-col space-y-2">
+                        <span className="font-bold">Address</span>
+                        <span>Ahmedabad</span>
                     </li>
                 </ul>
             </footer>
         </div>
-    )
-}
+    );
+};

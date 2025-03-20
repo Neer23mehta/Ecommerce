@@ -1,96 +1,102 @@
-import { NavLink } from "react-router-dom";
-import "/home/tristate/Desktop/Neer/neer/src/EcommerseUI/Headers.css";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { IoCartOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 export const Headers = ({ isLoggedIn, setIsLoggedIn }) => {
-    const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
-    const [select, Setselect] = useState("");
+    const navigate = useNavigate();
+    const items = useSelector((state) => state.items);
 
-    if (isLoading) {
-        return <div>Loading ...</div>;
-    }
-
-    const fetchProduct = async (product) => {
-        try {
-            const res = await fetch(`https://fakestoreapi.com/products?category=${product}`); 
-            const data = await res.json();
-            console.log(data);  
-        } catch (error) {
-            console.error(error);
-        }
+    const handleLogout = () => {
+        localStorage.removeItem('userToken');
+        setIsLoggedIn(false);
+        navigate('/');
     };
-
-    // useEffect(() => {
-    //     if (select) {
-    //         fetchProduct(select);
-    //     }
-    // }, [select]); 
-
-    const handlesearchchange = (e) => {
-        Setselect(e.target.value.toLowerCase()); 
-    };
-
-    const handleSearchSubmit = (e) => {
-        e.preventDefault(); 
-        if (select) {
-            fetchProduct(select);
-        }
-    };
-
+    const TotalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
     return (
-        <div className="Main-Nav">
-            <nav>
-                <div className="Logo">
+        <div className="bg-gray-800 text-white shadow-md">
+            <nav className="flex justify-between items-center p-5 max-w-screen-xl mx-auto">
+                <div className="text-3xl font-bold text-green-500">
                     <h1>Neer Mehta</h1>
                 </div>
-                <div className="List">
-                    {/* <div>
-                        <form onSubmit={handleSearchSubmit}>
-                            <input
-                                type="text"
-                                value={select}
-                                onChange={handlesearchchange}
-                                placeholder="Search Products"
-                            />
-                        </form>
-                    </div> */}
-                    <li>
-                        <NavLink to="/" style={({ isActive }) => ({ color: isActive ? "Green" : "white" })}>
+                <div className="flex space-x-7">
+                    <li className="list-none">
+                        <NavLink
+                            to="/"
+                            className="hover:text-green-500"
+                            style={({ isActive }) => ({
+                                color: isActive ? "green" : "white"
+                            })}
+                        >
                             Home
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/about" style={({ isActive }) => ({ color: isActive ? "Green" : "white" })}>
+                    <li className="list-none">
+                        <NavLink
+                            to="/about"
+                            className="hover:text-green-500"
+                            style={({ isActive }) => ({
+                                color: isActive ? "green" : "white"
+                            })}
+                        >
                             About
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/contact" style={({ isActive }) => ({ color: isActive ? "Green" : "white" })}>
+                    <li className="list-none">
+                        <NavLink
+                            to="/contact"
+                            className="hover:text-green-500"
+                            style={({ isActive }) => ({
+                                color: isActive ? "green" : "white"
+                            })}
+                        >
                             Contact
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/cart" style={({ isActive }) => ({ color: isActive ? "Green" : "white" })}>
-                            Cart
+                    <li className="list-none">
+                        <NavLink
+                            to="/cart"
+                            className="hover:text-green-500 relative"
+                            style={({ isActive }) => ({
+                                color: isActive ? "green" : "white"
+                            })}
+                        >
+                            {/* Add the cart icon here if logged in */}
+                            {isLoggedIn ? (
+                                <li className="flex flex-row justify-center"><IoCartOutline className="text-2xl" />{TotalQuantity}  
+                                </li>) : null}
+                            {/* Optional: Cart Item Count */}
+                            {/* <span className="absolute top-0 right-0 text-sm bg-red-500 text-white rounded-full px-2 py-1">
+                                {items.reduce((acc, item) => acc + item.quantity, 0)}
+                            </span> */}
                         </NavLink>
                     </li>
-                    <li>
-                        {isAuthenticated && <a>{user.name}</a>}
+                    <li className="list-none">
+                        <NavLink
+                            to="/orders"
+                            className="hover:text-green-500"
+                            style={({ isActive }) => ({
+                                color: isActive ? "green" : "white"
+                            })}
+                        >
+                            Order
+                        </NavLink>
                     </li>
-                    {
-                        isAuthenticated ? (
-                            <li>
-                                <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-                                    Log Out
-                                </button>
-                            </li>
+                    <li className="list-none">
+                        {isLoggedIn ? (
+                            <button
+                                onClick={handleLogout}
+                                className="w-20 bg-green-500 text-white rounded-md hover:bg-green-600"
+                            >
+                                Log Out
+                            </button>
                         ) : (
-                            <li>
-                                <button onClick={() => loginWithRedirect()}>Log In</button>
-                            </li>
-                        )
-                    }
+                            <NavLink to="/log-in">
+                                <button className="w-20 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                    Log In
+                                </button>
+                            </NavLink>
+                        )}
+                    </li>
                 </div>
             </nav>
         </div>

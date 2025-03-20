@@ -5,7 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { store } from './Ecommerse/Store/StoreR';
+import { persistor, store } from './Ecommerse/Store/StoreR';
+import { PersistGate } from 'redux-persist/integration/react';
+import { ToastContainer } from 'react-toastify';
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Auth0Provider
@@ -16,7 +20,10 @@ root.render(
     }}
   >
     <Provider store={store}>
-      <App />
+      <PersistGate persistor={persistor}>
+        <App />
+        <ToastContainer/>
+      </PersistGate>
     </Provider>
   </Auth0Provider>,
 
